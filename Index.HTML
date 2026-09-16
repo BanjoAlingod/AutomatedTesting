@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Scholarship Automated Testing Lab</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        /* =========================
+           RULES
+        ========================= */
+
+        .rules {
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rules ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .rules li {
+            margin-bottom: 5px;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            padding: 13px;
+            border-radius: 7px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .check-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .test-btn {
+            background: #16a34a;
+            color: white;
+        }
+
+        .clear-btn {
+            background: #64748b;
+            color: white;
+        }
+
+        /* =========================
+           MANUAL RESULT
+        ========================= */
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .eligible {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .not-eligible {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            padding: 15px;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .summary-box strong {
+            display: block;
+            font-size: 26px;
+        }
+
+        .pass-number {
+            color: #15803d;
+        }
+
+        .fail-number {
+            color: #dc2626;
+        }
+
+        /* =========================
+           TEST RESULT
+        ========================= */
+
+        .test {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border-left: 5px solid #94a3b8;
+        }
+
+        .pass-test {
+            border-left-color: #16a34a;
+        }
+
+        .fail-test {
+            border-left-color: #dc2626;
+        }
+
+        .test-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+        }
+
+        .positive {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .boundary {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .test-inputs {
+            margin-top: 12px;
+            background: #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .input-item {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .expected {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .actual {
+            color: #7c3aed;
+            font-weight: bold;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           TESTING INFO
+        ========================= */
+
+        .testing-info {
+            margin-top: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .testing-info h3 {
+            margin-top: 0;
+        }
+
+        .testing-info p {
+            margin-bottom: 5px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <h1>🎓 Scholarship Eligibility Testing Lab</h1>
+
+    <p class="subtitle">
+        Demonstration of Positive Testing, Negative Testing,
+        Boundary Value Analysis, and Automated Testing.
+    </p>
+
+
+    <div class="grid">
+
+
+        <!-- =====================================================
+             APPLICATION
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2>Scholarship Checker</h2>
+
+
+            <div class="rules">
+
+                <strong>📋 Eligibility Rules</strong>
+
+                <ul>
+
+                    <li>GPA must be between <strong>90–100</strong></li>
+
+                    <li>Attendance must be between <strong>90–100%</strong></li>
+
+                    <li>No failing subjects</li>
+
+                    <li>Family income must be <strong>₱30,000 or below</strong></li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- STUDENT NAME -->
+
+            <label for="studentName">
+                Student Name
+            </label>
+
+            <input
+                id="studentName"
+                type="text"
+                placeholder="Juan Dela Cruz"
+            >
+
+
+            <!-- GPA -->
+
+            <label for="gpa">
+                GPA
+            </label>
+
+            <input
+                id="gpa"
+                type="number"
+                placeholder="90"
+                step="0.01"
+            >
+
+
+            <!-- ATTENDANCE -->
+
+            <label for="attendance">
+                Attendance (%)
+            </label>
+
+            <input
+                id="attendance"
+                type="number"
+                placeholder="95"
+            >
+
+
+            <!-- FAILED SUBJECTS -->
+
+            <label for="failedSubjects">
+                Number of Failing Subjects
+            </label>
+
+            <input
+                id="failedSubjects"
+                type="number"
+                placeholder="0"
+            >
+
+
+            <!-- INCOME -->
+
+            <label for="income">
+                Family Monthly Income (₱)
+            </label>
+
+            <input
+                id="income"
+                type="number"
+                placeholder="25000"
+            >
+
+
+            <!-- MANUAL TEST -->
+
+            <button
+                class="check-btn"
+                onclick="checkEligibility()"
+            >
+                🔍 Check Eligibility
+            </button>
+
+
+            <div
+                id="result"
+                class="result"
+            ></div>
+
+
+            <!-- AUTOMATED TEST -->
+
+            <button
+                class="test-btn"
+                onclick="runTests()"
+            >
+                ▶ Run Automated Tests
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="clearTests()"
+            >
+                🗑 Clear Test Results
+            </button>
+
+
+            <div class="testing-info">
+
+                <h3>🧪 Testing Concepts</h3>
+
+                <p>
+                    <strong>Positive Testing:</strong>
+                    Tests valid inputs.
+                </p>
+
+                <p>
+                    <strong>Negative Testing:</strong>
+                    Tests invalid inputs.
+                </p>
+
+                <p>
+                    <strong>Boundary Testing:</strong>
+                    Tests values around limits.
+                </p>
+
+                <p>
+                    <strong>Expected Result:</strong>
+                    What should happen.
+                </p>
+
+                <p>
+                    <strong>Actual Result:</strong>
+                    What actually happened.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             AUTOMATED TEST RESULTS
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2>🧪 Automated Test Results</h2>
+
+
+            <!-- SUMMARY -->
+
+            <div class="summary">
+
+                <div class="summary-box">
+
+                    <strong id="total">
+                        0
+                    </strong>
+
+                    Total
+
+                </div>
+
+
+                <div class="summary-box pass-number">
+
+                    <strong id="passed">
+                        0
+                    </strong>
+
+                    Passed
+
+                </div>
+
+
+                <div class="summary-box fail-number">
+
+                    <strong id="failed">
+                        0
+                    </strong>
+
+                    Failed
+
+                </div>
+
+            </div>
+
+
+            <!-- TEST RESULTS -->
+
+            <div id="testResults">
+
+                <p style="color:#64748b;">
+
+                    Click
+                    <strong>
+                        "Run Automated Tests"
+                    </strong>
+                    to begin.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* ============================================================
+   APPLICATION LOGIC
+============================================================ */
+
+
+/*
+    Scholarship business rules:
+
+    GPA:
+        90 - 100
+
+    Attendance:
+        90 - 100%
+
+    Failed subjects:
+        0
+
+    Income:
+        <= 30,000
+*/
+
+
+function checkScholarship(
+    gpa,
+    attendance,
+    failedSubjects,
+    income
+) {
+
+
+    /* -------------------------
+       INPUT VALIDATION
+    ------------------------- */
+
+    if (
+        typeof gpa !== "number" ||
+        isNaN(gpa)
+    ) {
+
+        return {
+            eligible: false,
+            message: "Invalid GPA."
+        };
+
+    }
+
+
+    if (
+        typeof attendance !== "number" ||
+        isNaN(attendance)
+    ) {
+
+        return {
+            eligible: false,
+            message: "Invalid attendance."
+        };
+
+    }
+
+
+    if (
+        typeof failedSubjects !== "number" ||
+        isNaN(failedSubjects)
+    ) {
+
+        return {
+            eligible: false,
+            message: "Invalid number of failing subjects."
+        };
+
+    }
+
+
+    if (
+        typeof income !== "number" ||
+        isNaN(income)
+    ) {
+
+        return {
+            eligible: false,
+            message: "Invalid family income."
+        };
+
+    }
+
+
+    /* -------------------------
+       GPA RULE
+    ------------------------- */
+
+    if (
+        gpa < 90 ||
+        gpa > 100
+    ) {
+
+        return {
+            eligible: false,
+            message: "GPA requirement not met."
+        };
+
+    }
+
+
+    /* -------------------------
+       ATTENDANCE RULE
+    ------------------------- */
+
+    if (
+        attendance < 90 ||
+        attendance > 100
+    ) {
+
+        return {
+            eligible: false,
+            message: "Attendance requirement not met."
+        };
+
+    }
+
+
+    /* -------------------------
+       FAILED SUBJECT RULE
+    ------------------------- */
+
+    if (failedSubjects > 0) {
+
+        return {
+            eligible: false,
+            message: "Student has failing subjects."
+        };
+
+    }
+
+
+    /* -------------------------
+       INCOME RULE
+    ------------------------- */
+
+    if (income > 30000) {
+
+        return {
+            eligible: false,
+            message: "Family income exceeds ₱30,000."
+        };
+
+    }
+
+
+    /* -------------------------
+       ALL CONDITIONS PASSED
+    ------------------------- */
+
+    return {
+        eligible: true,
+        message: "Student is eligible for the scholarship!"
+    };
+
+}
+
+
+
+/* ============================================================
+   MANUAL TESTING
+============================================================ */
+
+
+function checkEligibility() {
+
+
+    const gpa =
+        Number(
+            document.getElementById("gpa").value
+        );
+
+
+    const attendance =
+        Number(
+            document.getElementById("attendance").value
+        );
+
+
+    const failedSubjects =
+        Number(
+            document.getElementById("failedSubjects").value
+        );
+
+
+    const income =
+        Number(
+            document.getElementById("income").value
+        );
+
+
+    const result =
+        checkScholarship(
+            gpa,
+            attendance,
+            failedSubjects,
+            income
+        );
+
+
+    const resultBox =
+        document.getElementById("result");
+
+
+    resultBox.style.display = "block";
+
+
+    resultBox.textContent =
+        result.message;
+
+
+    if (result.eligible) {
+
+        resultBox.className =
+            "result eligible";
+
+    } else {
+
+        resultBox.className =
+            "result not-eligible";
+
+    }
+
+}
+
+
+
+/* ============================================================
+   AUTOMATED TESTING
+============================================================ */
+
+
+let tests = [];
+
+
+
+/*
+    Generic automated test function.
+
+    It records:
+
+    - Test name
+    - Test type
+    - Input values
+    - Expected result
+    - Actual result
+    - PASS / FAIL
+*/
+
+
+function test(
+    name,
+    type,
+    inputs,
+    expected,
+    testFunction
+) {
+
+
+    try {
+
+
+        const actual =
+            testFunction();
+
+
+        tests.push({
+
+            name: name,
+
+            type: type,
+
+            inputs: inputs,
+
+            expected: expected,
+
+            actual: actual,
+
+            passed: actual === expected
+
+        });
+
+
+    } catch (error) {
+
+
+        tests.push({
+
+            name: name,
+
+            type: type,
+
+            inputs: inputs,
+
+            expected: expected,
+
+            actual: "ERROR",
+
+            passed: false
+
+        });
+
+    }
+
+}
+
+
+
+/* ============================================================
+   RUN ALL AUTOMATED TESTS
+============================================================ */
+
+
+function runTests() {
+
+
+    clearTests();
+
+
+    /* ========================================================
+       POSITIVE TESTING
+    ======================================================== */
+
+
+    test(
+
+        "Valid Student",
+
+        "Positive",
+
+        {
+            GPA: 95,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Excellent Student",
+
+        "Positive",
+
+        {
+            GPA: 100,
+            Attendance: "100%",
+            "Failed Subjects": 0,
+            Income: "₱10,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                100,
+                100,
+                0,
+                10000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    /* ========================================================
+       NEGATIVE TESTING
+    ======================================================== */
+
+
+    test(
+
+        "GPA Below Requirement",
+
+        "Negative",
+
+        {
+            GPA: 89,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                89,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Attendance Below Requirement",
+
+        "Negative",
+
+        {
+            GPA: 95,
+            Attendance: "89%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                89,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Has Failing Subject",
+
+        "Negative",
+
+        {
+            GPA: 95,
+            Attendance: "95%",
+            "Failed Subjects": 1,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                95,
+                1,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Income Above Limit",
+
+        "Negative",
+
+        {
+            GPA: 95,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱30,001"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                95,
+                0,
+                30001
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    /* ========================================================
+       BOUNDARY VALUE TESTING
+    ======================================================== */
+
+
+    test(
+
+        "GPA = 89.99",
+
+        "Boundary",
+
+        {
+            GPA: 89.99,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                89.99,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "GPA = 90",
+
+        "Boundary",
+
+        {
+            GPA: 90,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                90,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "GPA = 100",
+
+        "Boundary",
+
+        {
+            GPA: 100,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                100,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "GPA = 100.01",
+
+        "Boundary",
+
+        {
+            GPA: 100.01,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                100.01,
+                95,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Attendance = 89.99%",
+
+        "Boundary",
+
+        {
+            GPA: 95,
+            Attendance: "89.99%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                89.99,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Attendance = 90%",
+
+        "Boundary",
+
+        {
+            GPA: 95,
+            Attendance: "90%",
+            "Failed Subjects": 0,
+            Income: "₱20,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                90,
+                0,
+                20000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Income = ₱30,000",
+
+        "Boundary",
+
+        {
+            GPA: 95,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱30,000"
+        },
+
+        true,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                95,
+                0,
+                30000
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    test(
+
+        "Income = ₱30,001",
+
+        "Boundary",
+
+        {
+            GPA: 95,
+            Attendance: "95%",
+            "Failed Subjects": 0,
+            Income: "₱30,001"
+        },
+
+        false,
+
+        () => {
+
+            return checkScholarship(
+                95,
+                95,
+                0,
+                30001
+            ).eligible;
+
+        }
+
+    );
+
+
+
+    /* ========================================================
+       DISPLAY RESULTS
+    ======================================================== */
+
+
+    displayTests();
+
+}
+
+
+
+/* ============================================================
+   DISPLAY TEST RESULTS
+============================================================ */
+
+
+function displayTests() {
+
+
+    const container =
+        document.getElementById(
+            "testResults"
+        );
+
+
+    container.innerHTML = "";
+
+
+    let passed = 0;
+
+    let failed = 0;
+
+
+
+    tests.forEach(test => {
+
+
+        if (test.passed) {
+
+            passed++;
+
+        } else {
+
+            failed++;
+
+        }
+
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            test.passed
+            ? "test pass-test"
+            : "test fail-test";
+
+
+
+        let badgeClass;
+
+
+        if (test.type === "Positive") {
+
+            badgeClass = "positive";
+
+        }
+
+        else if (test.type === "Negative") {
+
+            badgeClass = "negative";
+
+        }
+
+        else {
+
+            badgeClass = "boundary";
+
+        }
+
+
+
+        /* -------------------------------------
+           CREATE INPUT DISPLAY
+        ------------------------------------- */
+
+
+        let inputHTML = "";
+
+
+        for (
+            const key in test.inputs
+        ) {
+
+
+            inputHTML += `
+
+                <span class="input-item">
+
+                    <strong>
+                        ${key}:
+                    </strong>
+
+                    ${test.inputs[key]}
+
+                </span>
+
+            `;
+
+        }
+
+
+
+        /* -------------------------------------
+           EXPECTED / ACTUAL TEXT
+        ------------------------------------- */
+
+
+        const expectedText =
+            test.expected
+            ? "Eligible"
+            : "Not Eligible";
+
+
+        const actualText =
+            test.actual === true
+            ? "Eligible"
+            : test.actual === false
+            ? "Not Eligible"
+            : test.actual;
+
+
+
+        /* -------------------------------------
+           RESULT HTML
+        ------------------------------------- */
+
+
+        div.innerHTML = `
+
+            <div class="test-title">
+
+                ${test.passed
+                    ? "✅"
+                    : "❌"
+                }
+
+                ${test.name}
+
+                <span
+                    class="badge ${badgeClass}"
+                >
+                    ${test.type}
+                </span>
+
+            </div>
+
+
+            <div class="test-inputs">
+
+                <div>
+
+                    ${inputHTML}
+
+                </div>
+
+
+                <hr>
+
+
+                <div>
+
+                    <span class="expected">
+
+                        Expected:
+                        ${expectedText}
+
+                    </span>
+
+
+                    &nbsp;&nbsp;
+
+
+                    <span class="actual">
+
+                        Actual:
+                        ${actualText}
+
+                    </span>
+
+                </div>
+
+
+                <div class="status">
+
+                    ${test.passed
+                        ? "✅ TEST PASSED"
+                        : "❌ TEST FAILED"
+                    }
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+
+    /* -------------------------------------
+       UPDATE SUMMARY
+    ------------------------------------- */
+
+
+    document.getElementById("total")
+        .textContent =
+        tests.length;
+
+
+    document.getElementById("passed")
+        .textContent =
+        passed;
+
+
+    document.getElementById("failed")
+        .textContent =
+        failed;
+
+}
+
+
+
+/* ============================================================
+   CLEAR TEST RESULTS
+============================================================ */
+
+
+function clearTests() {
+
+
+    tests = [];
+
+
+    document.getElementById("total")
+        .textContent = "0";
+
+
+    document.getElementById("passed")
+        .textContent = "0";
+
+
+    document.getElementById("failed")
+        .textContent = "0";
+
+
+    document.getElementById("testResults")
+        .innerHTML = `
+
+            <p style="color:#64748b;">
+
+                Click
+                <strong>
+                    "Run Automated Tests"
+                </strong>
+                to begin.
+
+            </p>
+
+        `;
+
+}
+
+</script>
+
+
+</body>
+</html>
